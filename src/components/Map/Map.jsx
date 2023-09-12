@@ -6,15 +6,14 @@ import {
     Marker,
     Polyline,
 } from "react-google-maps";
-import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
 import "../../App.css";
 
 const Map = ({ paths, stops }) => {
     const [progress, setProgress] = useState(null);
-    const velocity = 30;
+    const velocity = 300;
     let intialDate;
     let interval = null;
+    const [move, setMove] = useState(true);
 
     const droneIcon = {
         url: "https://images.vexels.com/media/users/3/211837/isolated/lists/b4b43ec942ae9c695fc7f43d59234182-drone-quad-tilted-front.png",
@@ -41,6 +40,7 @@ const Map = ({ paths, stops }) => {
 
     const moveDrone = () => {
         const dist = getDist();
+
         if (!dist) {
             return;
         }
@@ -77,8 +77,6 @@ const Map = ({ paths, stops }) => {
             nextLineLatLng,
             percent
         );
-
-        mapUpdate();
         setProgress(progress.concat(position));
     };
 
@@ -103,87 +101,74 @@ const Map = ({ paths, stops }) => {
     };
 
     const startSim = useCallback(() => {
-        if (interval) {
+        if (interval && move === false) {
             window.clearInterval(interval);
         }
+        console.log(move);
         setProgress(null);
         intialDate = new Date();
-        interval = window.setInterval(moveDrone, 1000);
+
+        interval = window.setInterval(() => {
+            if (move) moveDrone();
+            console.log(move);
+        }, 1000);
     }, [interval, intialDate]);
 
-    const mapUpdate = () => {
-        const dist = getDist();
-
-        if (!dist) return;
-
-        let progress = paths.filter((coordinates) => coordinates.dist < dist);
-        const nextLine = paths.find((coordinates) => coordinates.dist > dist);
-
-        let point1, point2;
-
-        if (nextLine) {
-            point1 = progress[progress.length - 1];
-            point2 = nextLine;
-        } else {
-            point1 = progress[progress.length - 2];
-            point2 = progress[progress.length - 1];
-        }
-
-        const point1LatLng = new window.google.maps.LatLng(point1.lat, point1.lng);
-        const point2LatLng = new window.google.maps.LatLng(point2.lat, point2.lng);
-    };
-
     return (
-        <Card variant="outlined">
-            <div className="btnCont">
-                <Button variant="contained" onClick={startSim}>
-                    Start Simulation
-                </Button>
-            </div>
+        <div className="map">
+            <GoogleMap
+                defaultZoom={14}
+                defaultCenter={{ lat: centerPathLatitide, lng: centerPathLongitude }}
+            >
+                <Polyline
+                    path={paths}
+                    options={{
+                        strokeColor: "#8B0000",
+                        strokeWeight: 6,
+                        strokeOpacity: 0.6,
+                        defaultVisible: true,
+                    }}
+                />
 
-            <div className="gMapCont">
-                <GoogleMap
-                    defaultZoom={17}
-                    defaultCenter={{ lat: centerPathLatitide, lng: centerPathLatitide }}
-                >
-                    <Polyline
-                        path={paths}
-                        options={{
-                            strokeColor: "#ff007b",
-                            strokeWeight: 6,
-                            strokeOpacity: 0.6,
-                            defaultVisible: true,
+                {stops.map((stop, index) => (
+                    <Marker
+                        key={index}
+                        position={{
+                            lat: stop.lat,
+                            lng: stop.lng,
                         }}
+                        title={stop.id}
+                        label={`${index + 1}`}
                     />
+                ))}
 
-                    {stops.data.map((stop, index) => (
-                        <Marker
-                            key={index}
-                            position={{
-                                lat: stop.lat,
-                                lng: stop.lng,
-                            }}
-                            title={stop.id}
-                            label={`${index + 1}`}
-                        />
-                    ))}
+                {progress && (
+                    <>
+                        <Polyline path={progress} options={{ strokeColor: "#90EE90" }} />
 
-                    {progress && (
-                        <>
-                            <Polyline path={progress} options={{ strokeColor: "#00eeff" }} />
+                        <Marker icon={droneIcon} position={progress[progress.length - 1]} />
+                    </>
+                )}
+            </GoogleMap>
 
-                            <Marker icon={droneIcon} position={progress[progress.length - 1]} />
-                        </>
-                    )}
-                </GoogleMap>
+            <div className="bttns">
+                <button  onClick={startSim}>
+                    Start Simulation
+                </button>
+                
+                <button
+                    onClick={() => {
+                        setMove(!move);
+                    }}
+                >
+                    Move / Resume
+                </button>
             </div>
-        </Card>
+
+        </div>
     );
 };
 
+// export default Map;
 
-export default withScriptjs(
-  withGoogleMap(
-    Map
-  )
-)
+export default withScriptjs(withGoogleMap(Map));

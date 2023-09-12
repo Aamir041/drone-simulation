@@ -7,7 +7,6 @@
   flex-shrink: 0;
   position: static;
   color: #fff;
-  /* margin-top: 20px; */
 }
 .mapContainer > div {
   margin: 20px 20px;
@@ -15,4 +14,21 @@
 .btnCont {
   display: flex;
   justify-content: center;
+}
+
+.bttns{
+  display: flex;
+  justify-content: space-between;
+}
+
+.bttns button{
+  all: unset;
+  background-color: #1DB954
+  ;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+}
+
+.bttns button:hover{
+  cursor: pointer;
 }
