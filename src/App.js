@@ -6,9 +6,10 @@ import { useState } from "react";
 import { useEffect } from "react";
 
 function App() {
-  const [url,setUrl] = useState('https://aamir041.github.io/js_projects/new_data.json');
+  const [url,setUrl] = useState(null);
 
   const [tempUrl,setTempUrl] = useState(null);
+  const[errorApi, setErrorApi] = useState(false);
 
   const {data:paths} = useFetch(url);
   let stops = null;
@@ -19,7 +20,13 @@ function App() {
   const mapURL = `https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyA5Lt3E5gYb-lfogvaSpCrvCpocLqHwNOI`;
 
   const changeUrl = () => {
-    setUrl(tempUrl)
+    if(tempUrl.indexOf("aamir") >= 0){
+      setUrl(tempUrl);
+      setErrorApi(false);
+    }
+    else{
+      setErrorApi(true);
+    }
   }
 
   useEffect(() => {
@@ -35,6 +42,15 @@ function App() {
                 <button onClick={changeUrl}> Change URL</button>
       </div>
 
+      {
+        errorApi && <div className="error-api">
+          <h1>Invalid API</h1>
+          <p className="readme-link">
+          Refer api from reademe only : <a href="https://github.com/Aamir041/drone-simulation/blob/main/README.md " target="_blank" >https://github.com/Aamir041/drone-simulation/blob/main/README.md</a>
+          </p>
+        </div>
+      }
+
       {paths && stops ? 
       <Map
           paths={paths}
@@ -45,7 +61,14 @@ function App() {
           containerElement={<div className='mapContainer'  />}
           mapElement={<div style={{ height: `100%` }} />}
       /> 
-      : <h1>Please Enter A Valid URL</h1>}
+      : 
+      <div className="invalid-screen">
+        <h1>Please Enter A Valid URL or Refersh Page</h1>
+        <p className="readme-link">
+          Refer api from reademe only : <a href="https://github.com/Aamir041/drone-simulation/blob/main/README.md " target="_blank" >https://github.com/Aamir041/drone-simulation/blob/main/README.md</a>
+          </p>
+      </div>
+      }
     </div>
   );
 }

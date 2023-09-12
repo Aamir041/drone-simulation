@@ -56,3 +56,25 @@
   color: white;
   font-weight: bold;
 }
+
+.invalid-screen{
+  max-width: max-content;
+  margin: 3rem auto;
+}
+
+
+.error-api{
+  width: max-content;
+  margin: 1rem auto ;
+  color: red;
+  text-align: center;
+}
+
+.error-api h1{
+  font-size: 2rem;
+}
+
+.readme-link{
+  color: red;
+  font-size: 1.2rem;
+}
