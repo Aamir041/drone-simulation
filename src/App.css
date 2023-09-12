@@ -1,15 +1,18 @@
 .mapContainer {
-  height: calc(100vh - 80px);
+  height: 83.5vh;
   display: flex;
   flex-direction: column;
   width: 100%;
   box-sizing: border-box;
+  justify-content: space-evenly;
   flex-shrink: 0;
-  position: static;
   color: #fff;
 }
 .mapContainer > div {
-  margin: 20px 20px;
+  /* margin: 20px 20px; */
+  margin-bottom: 2rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 .btnCont {
   display: flex;
@@ -31,4 +34,25 @@
 
 .bttns button:hover{
   cursor: pointer;
+}
+
+.map-inputs{
+  display: flex;
+  justify-content: center;
+  padding: 1rem 1.5rem;
+  
+}
+
+.map-inputs input{
+  font-size: 1.2rem;
+  width: 50%;
+}
+
+.map-inputs button{
+  all: unset;
+  margin-left: 0.5rem;
+  background-color: #1DB954;
+  padding: 0.5rem 1rem;
+  color: white;
+  font-weight: bold;
 }

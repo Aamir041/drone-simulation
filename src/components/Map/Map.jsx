@@ -9,6 +9,7 @@ import {
 import "../../App.css";
 
 const Map = ({ paths, stops }) => {
+
     const [progress, setProgress] = useState(null);
     const velocity = 300;
     let intialDate;
@@ -104,18 +105,17 @@ const Map = ({ paths, stops }) => {
         if (interval && move === false) {
             window.clearInterval(interval);
         }
-        console.log(move);
         setProgress(null);
         intialDate = new Date();
 
         interval = window.setInterval(() => {
             if (move) moveDrone();
-            console.log(move);
         }, 1000);
     }, [interval, intialDate]);
 
     return (
         <div className="map">
+
             <GoogleMap
                 defaultZoom={14}
                 defaultCenter={{ lat: centerPathLatitide, lng: centerPathLongitude }}
